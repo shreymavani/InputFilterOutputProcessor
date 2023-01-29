@@ -20,8 +20,8 @@ public class TestingForInputProcessor {
     public void ini() throws IOException {
         configuration =new Configuration();
         filterProcessor=new FilterProcessor();
-        testFilePath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/TestingForInputProcessor.properties","testFilePath");
-        expectedFilePath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/TestingForInputProcessor.properties","outputFilePath");
+        testFilePath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputProcessorTest.properties","testFilePath");
+        expectedFilePath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputProcessorTest.properties","outputFilePath");
         destination = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputOutputPathOfFile.properties","outputFilePath");
         file = new File(testFilePath);
         br = new BufferedReader(new FileReader(testFilePath));

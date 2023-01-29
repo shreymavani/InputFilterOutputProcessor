@@ -19,7 +19,7 @@ public class TestingForOutputprocessor {
     public void ini() throws IOException {
         outputProcessor=new OutputProcessor();
         configuration =new Configuration();
-        testingFile = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/TestingForOutputProcessor.properties","testingFilePath");
+        testingFile = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/OutputProcessorTest.properties","testingFilePath");
         destination = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputOutputPathOfFile.properties","outputFilePath");
     }
 

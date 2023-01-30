@@ -20,8 +20,9 @@ public class TestingForFilterProcessor {
     Properties prop = new Properties();
     @BeforeEach
     public void init() {
-        filterProcessor = new FilterProcessor();
         configuration = new Configuration();
+        configuration.fetchPaths();
+        filterProcessor = new FilterProcessor(configuration);
     }
 
     @Test
@@ -46,8 +47,8 @@ public class TestingForFilterProcessor {
     @DisplayName("Testing File Based TestCases")
     public void fileBasedTesting() throws IOException {
 
-        String filePath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/FilePathForFilterTesting.properties","filePath1");
-        String OutputfilePath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/FilePathForFilterTesting.properties","outputFilePath1");
+        String filePath = configuration.getDirectoryPath("inputFilePathFilterProTesting");
+        String OutputfilePath = configuration.getDirectoryPath("outputFilePathFilterProTesting");
 
         String data = Files.readString(Paths.get(filePath));
         String expectedOutput = Files.readString(Paths.get(OutputfilePath));

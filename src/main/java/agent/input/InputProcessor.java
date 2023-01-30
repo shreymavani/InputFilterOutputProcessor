@@ -20,19 +20,14 @@ public class InputProcessor implements Processor {
 
     private static final int MAX_BATCH_SIZE = 1048576;
     private FilterProcessor filter;
-    private Configuration configuration;
-    Scanner in;
-    String regex,directoryPath,line;
+    String directoryPath,line;
 
-    public InputProcessor() throws IOException {
-        configuration = new Configuration();
-        directoryPath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputOutputPathOfFile.properties","directoryPath");
-        filter = new FilterProcessor();
+    public InputProcessor(Configuration configuration) throws IOException {
+        directoryPath = configuration.getDirectoryPath("inputDirectoryPath");
+        configuration.putRegex();
+        filter = new FilterProcessor(configuration);
     }
     public void process() {
-
-        in=new Scanner(System.in);
-        regex = in.nextLine();
 
         File directory = new File(directoryPath);         //path to directory
 
@@ -56,7 +51,7 @@ public class InputProcessor implements Processor {
 
 
                             String batchString = new String(batch, 0, read);    // Process the batch
-                            filter.sendMessage(batchString,regex);
+                            filter.sendMessage(batchString);
                         }
                     }
                 } else {
@@ -67,7 +62,7 @@ public class InputProcessor implements Processor {
                         while ((line = reader.readLine()) != null) {
                             entireFile += (line + "\n");
                         }
-                        filter.sendMessage(entireFile,regex);
+                        filter.sendMessage(entireFile);
                     }
                 }
             } catch (IOException e) {

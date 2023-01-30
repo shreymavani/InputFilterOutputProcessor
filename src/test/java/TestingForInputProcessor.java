@@ -12,27 +12,29 @@ public class TestingForInputProcessor {
     private FilterProcessor filterProcessor;
     private Configuration configuration;
     InputStream input = null;
-    String testFilePath ,expectedFilePath ,line,destination;
+    String testFilePath ,expectedFilePath ,line,destination,data;
     File file;
     BufferedReader br;
     @BeforeEach
     public void ini() throws IOException {
         configuration =new Configuration();
-        filterProcessor=new FilterProcessor();
-        testFilePath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputProcessorTest.properties","testFilePath");
-        expectedFilePath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputProcessorTest.properties","outputFilePath");
-        destination = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputOutputPathOfFile.properties","outputFilePath");
+        Configuration.fetchPaths();
+        testFilePath = configuration.getDirectoryPath("inputFilePathInputProTesting");
+        expectedFilePath = configuration.getDirectoryPath("outputFilePathInputProTesting");
+        destination = configuration.getDirectoryPath("outputFilePath");
         file = new File(testFilePath);
-        br = new BufferedReader(new FileReader(testFilePath));
+        br = new BufferedReader(new FileReader(file));
+        configuration.putRegex("(?i)(password|pwd|pass)[=:\\\\b]?[^\\\\b]+");
+        filterProcessor=new FilterProcessor(configuration);
     }
 
     @Test
     public void inputFileTestingByComparingOutputFile() throws IOException {
-        String data="";
+        data="";
         while ((line = br.readLine()) != null) {
             data += (line)+"\n";
         }
-        filterProcessor.sendMessage(data,"(?i)(password|pwd|pass)[=:\\\\b]?[^\\\\b]+");
+        filterProcessor.sendMessage(data);
         filterProcessor.process();
         file = new File(expectedFilePath);
         br = new BufferedReader(new FileReader(file));

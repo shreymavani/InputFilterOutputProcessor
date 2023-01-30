@@ -1,5 +1,6 @@
 package agent.filter;
 
+import agent.Configuration;
 import agent.output.OutputProcessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,21 +18,22 @@ import java.util.Queue;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import agent.Configuration;
 
 public class FilterProcessor implements Processor {
 
-    private String filterData;
+    private String filterData,regex;
     private OutputProcessor outputProcessor;
     private Queue<String> queue = new LinkedList<>();
-    public FilterProcessor()
+    public FilterProcessor(Configuration configuration)
     {
-        outputProcessor = new OutputProcessor();
+        regex = configuration.getRegex();
+        outputProcessor = new OutputProcessor(configuration);
     }
     public void process() {
 
         try {
             String currentData = receiveMessage();
-            String regex = receiveMessage();
             filterData = stringFiltering(currentData, regex);
             outputProcessor.sendMessage(filterData);
             outputProcessor.process();
@@ -57,9 +59,8 @@ public class FilterProcessor implements Processor {
 
     }
 
-    public void sendMessage(String message,String regex) {
+    public void sendMessage(String message) {
         queue.offer(message);
-        queue.offer(regex);
     }
 
     public String receiveMessage() {

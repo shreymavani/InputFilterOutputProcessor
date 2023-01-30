@@ -20,14 +20,13 @@ public class OutputProcessor implements Processor {
     private String destination = null,inputData="";
     private Queue<String> queue = new LinkedList<>();
     private Configuration configuration;
-    public OutputProcessor()
+    public OutputProcessor(Configuration configuration)
     {
-        configuration = new Configuration();
+        this.configuration = configuration;
     }
     public void process() throws Exception {
 
-        destination = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputOutputPathOfFile.properties","outputFilePath");
-
+        destination = configuration.getDirectoryPath("outputFilePath");
         FileWriter fw = new FileWriter(destination, true);
         inputData=receiveMessage();
         fw.write(inputData);

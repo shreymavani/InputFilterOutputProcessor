@@ -13,7 +13,6 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import java.io.*;
-import java.util.Scanner;
 import java.util.Set;
 
 public class InputProcessor implements Processor {

@@ -2,8 +2,8 @@ package agent.filter;
 
 import agent.Configuration;
 import agent.output.OutputProcessor;
-import org.jetbrains.annotations.NotNull;
 
+import org.jetbrains.annotations.NotNull;
 import javax.annotation.processing.Completion;
 import javax.annotation.processing.ProcessingEnvironment;
 import javax.annotation.processing.Processor;
@@ -59,13 +59,9 @@ public class FilterProcessor implements Processor {
 
     }
 
-    public void sendMessage(String message) {
-        queue.offer(message);
-    }
+    public void sendMessage(String message) {queue.offer(message);}
 
-    public String receiveMessage() {
-        return queue.poll();
-    }
+    public String receiveMessage() {return queue.poll();}
 
     @Override
     public Set<String> getSupportedOptions() {

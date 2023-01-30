@@ -1,6 +1,5 @@
 package agent;
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -15,12 +14,6 @@ public class Configuration {
     private String regex;
     private Scanner in;
     private static HashMap<String,String>filePaths = new HashMap<>();
-    public String getDataFromPropertyFileWithKey(String pathToPropertyFile, String key) throws IOException {
-        input = new FileInputStream(pathToPropertyFile);
-        prop.load(input);
-        return prop.getProperty(key);
-    }
-
     public static void fetchPaths()
     {
         String directoryPath = "/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/propertyFiles";

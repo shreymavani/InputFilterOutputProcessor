@@ -1,9 +1,22 @@
-package agent.readfilterstore;
+package agent.input;
 
+import agent.Configuration;
+import agent.filter.*;
+
+import javax.annotation.processing.Completion;
+import javax.annotation.processing.ProcessingEnvironment;
+import javax.annotation.processing.Processor;
+import javax.annotation.processing.RoundEnvironment;
+import javax.lang.model.SourceVersion;
+import javax.lang.model.element.AnnotationMirror;
+import javax.lang.model.element.Element;
+import javax.lang.model.element.ExecutableElement;
+import javax.lang.model.element.TypeElement;
 import java.io.*;
 import java.util.Scanner;
+import java.util.Set;
 
-public class InputProcessor {
+public class InputProcessor implements Processor {
 
     private static final int MAX_BATCH_SIZE = 1048576;
     private FilterProcessor filter;
@@ -11,13 +24,12 @@ public class InputProcessor {
     Scanner in;
     String regex,directoryPath,line;
 
-    InputProcessor() throws IOException {
+    public InputProcessor() throws IOException {
         configuration = new Configuration();
         directoryPath = configuration.getDataFromPropertyFileWithKey("/Users/smavani/IdeaProjects/InputFilterOutputProcessor/src/resources/InputOutputPathOfFile.properties","directoryPath");
         filter = new FilterProcessor();
     }
-    void process() throws Exception {
-
+    public void process() {
 
         in=new Scanner(System.in);
         regex = in.nextLine();
@@ -44,7 +56,7 @@ public class InputProcessor {
 
 
                             String batchString = new String(batch, 0, read);    // Process the batch
-                            filter.filter(batchString,regex);
+                            filter.sendMessage(batchString,regex);
                         }
                     }
                 } else {
@@ -55,12 +67,44 @@ public class InputProcessor {
                         while ((line = reader.readLine()) != null) {
                             entireFile += (line + "\n");
                         }
-                        filter.filter(entireFile,regex);
+                        filter.sendMessage(entireFile,regex);
                     }
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
+            filter.process();
         }
+    }
+
+    @Override
+    public Set<String> getSupportedOptions() {
+        return null;
+    }
+
+    @Override
+    public Set<String> getSupportedAnnotationTypes() {
+        return null;
+    }
+
+    @Override
+    public SourceVersion getSupportedSourceVersion() {
+        return null;
+    }
+
+    @Override
+    public void init(ProcessingEnvironment processingEnv) {
+
+    }
+
+    @Override
+    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
+        return false;
+    }
+
+    @Override
+    public Iterable<? extends Completion> getCompletions(Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
+        return null;
     }
 }

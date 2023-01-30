@@ -1,5 +1,5 @@
-package agent.readfilterstore;
-
+import agent.Configuration;
+import agent.output.OutputProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +34,8 @@ public class TestingForOutputprocessor {
         actualData = "";
 
         while ((line = br.readLine()) != null) {            //Writing Content of Test file in other demo file using outputProcessor Store method.
-            outputProcessor.store(line);
+            outputProcessor.sendMessage(line);
+            outputProcessor.process();
             actualData += line;
         }
 

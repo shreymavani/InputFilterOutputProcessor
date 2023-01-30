@@ -1,17 +1,16 @@
-package agent.readfilterstore;
-
+import agent.Configuration;
+import agent.filter.FilterProcessor;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import java.io.*;
 import java.io.IOException;
 
-
 import static junit.framework.TestCase.assertEquals;
 public class TestingForInputProcessor {
 
-    FilterProcessor filterProcessor;
-    Configuration configuration;
+    private FilterProcessor filterProcessor;
+    private Configuration configuration;
     InputStream input = null;
     String testFilePath ,expectedFilePath ,line,destination;
     File file;
@@ -33,8 +32,8 @@ public class TestingForInputProcessor {
         while ((line = br.readLine()) != null) {
             data += (line)+"\n";
         }
-        filterProcessor.filter(data,"(?i)(password|pwd|pass)[=:\\\\b]?[^\\\\b]+");
-
+        filterProcessor.sendMessage(data,"(?i)(password|pwd|pass)[=:\\\\b]?[^\\\\b]+");
+        filterProcessor.process();
         file = new File(expectedFilePath);
         br = new BufferedReader(new FileReader(file));
         String expectedData = "";

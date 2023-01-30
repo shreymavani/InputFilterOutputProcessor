@@ -1,5 +1,5 @@
-package agent.readfilterstore;
-
+import agent.Configuration;
+import agent.filter.FilterProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

@@ -57,4 +57,9 @@ public class OutputProcessor implements Processor, MessageHandler {
 //        System.out.println(103);
         queue.offer(message);
     }
+
+    @Override
+    public void run() {
+        
+    }
 }

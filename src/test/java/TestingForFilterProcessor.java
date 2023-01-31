@@ -1,6 +1,7 @@
 import agent.config.Configuration;
 import agent.filter.FilterProcessor;
 import agent.input.InputProcessor;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,14 +18,14 @@ import static junit.framework.TestCase.assertEquals;
 
 public class TestingForFilterProcessor {
 
-    FilterProcessor filterProcessor;
-    Configuration configuration;
+    static FilterProcessor filterProcessor;
+    static Configuration configuration;
     @Autowired
-    InputProcessor inputProcessor;
+    static InputProcessor inputProcessor;
     InputStream input = null;
     Properties prop = new Properties();
-    @BeforeEach
-    public void init() {
+    @BeforeAll
+    public static void init() {
         configuration = new Configuration();
         configuration.fetchPaths();
         filterProcessor = new FilterProcessor(inputProcessor,configuration);

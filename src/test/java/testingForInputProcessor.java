@@ -4,30 +4,24 @@ import agent.input.InputProcessor;
 import org.junit.Test;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.*;
 import java.io.IOException;
 
 import static junit.framework.TestCase.assertEquals;
-public class TestingForInputProcessor {
+public class testingForInputProcessor {
 
-    private FilterProcessor filterProcessor;
-    private Configuration configuration;
+    private static FilterProcessor filterProcessor;
+    private static Configuration configuration;
     @Autowired
-    InputProcessor inputProcessor;
+    private static InputProcessor inputProcessor;
     InputStream input = null;
-    String testFilePath ,expectedFilePath ,line,destination,data;
+    static String testFilePath ,expectedFilePath ,line,destination,data;
     File file;
     BufferedReader br;
-    @BeforeEach
+    @BeforeAll
     public void ini() throws FileNotFoundException {
-
-    }
-
-    @Test
-    public void inputFileTestingByComparingOutputFile() throws IOException {
         configuration =new Configuration();
         Configuration.fetchPaths();
         testFilePath = configuration.getDirectoryPath("inputFilePathInputProTesting");
@@ -39,6 +33,11 @@ public class TestingForInputProcessor {
         InputProcessor inputProcessor=new InputProcessor(configuration);
         FilterProcessor filterProcessor = new FilterProcessor(inputProcessor,configuration);
         inputProcessor.register(filterProcessor);
+    }
+
+    @Test
+    public void inputFileTestingByComparingOutputFile() throws IOException {
+
 //        inputProcessor.process();
 //        System.out.println(1000);
         file = new File(testFilePath);

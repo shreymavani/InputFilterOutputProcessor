@@ -1,53 +1,58 @@
 package agent.filter;
 
 import agent.config.Configuration;
-import agent.input.InputProcessor;
+import agent.message.Message;
+import agent.messageHandler.MessageHandler;
 import agent.output.OutputProcessor;
+import agent.processor.Processor;
 
 import org.jetbrains.annotations.NotNull;
-import javax.annotation.processing.Completion;
-import javax.annotation.processing.ProcessingEnvironment;
-import javax.annotation.processing.Processor;
-import javax.annotation.processing.RoundEnvironment;
-import javax.lang.model.SourceVersion;
-import javax.lang.model.element.AnnotationMirror;
-import javax.lang.model.element.Element;
-import javax.lang.model.element.ExecutableElement;
-import javax.lang.model.element.TypeElement;
-import java.util.*;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FilterProcessor implements Observer,Processor {
+public class FilterProcessor implements MessageHandler,Processor {
 
     private String filterData,regex,rawData;
     private OutputProcessor outputProcessor;
-    private InputProcessor inputProcessor;
-    private Queue<String> queue = new LinkedList<>();
-    public FilterProcessor(InputProcessor inputProcessor,Configuration configuration)
+    private final BlockingQueue<Message> queue = new LinkedBlockingQueue<>();;
+    private  final ExecutorService executorService;
+    public FilterProcessor(ExecutorService executorService,Configuration configuration)
     {
+        this.executorService = executorService;
         regex = configuration.getRegex();
-        this.inputProcessor = inputProcessor;
-        outputProcessor = new OutputProcessor(configuration);
+        outputProcessor = new OutputProcessor(executorService,configuration);
+        executorService.submit(this::run);
     }
-    public void process() {
 
+    public void run() {
         try {
-            filterData = stringFiltering(rawData, regex);
-            outputProcessor.sendMessage(filterData);
-            outputProcessor.process();
-        } catch (Exception e) {
+            process();
+        } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
     @Override
-    public void update(Observable o, Object arg) {
+    public void process() throws InterruptedException {
 
-        rawData = (String) inputProcessor.getUpdate(this);
-        process();
+        while (true) {
+            try {
+                Message message = queue.take();
+                rawData = message.getData();
+//                System.out.println("98" + rawData);
+                filterData = stringFiltering(rawData, regex);
+//                System.out.println(98.1);
+                Message filteredMessage = new Message(filterData);
+//                System.out.println(99);
+                outputProcessor.handle(filteredMessage);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
-
-
     public String stringFiltering(@NotNull String inputData, String regex) {
         String[] splitData = inputData.split("\n");
         filterData = "";
@@ -65,38 +70,11 @@ public class FilterProcessor implements Observer,Processor {
 
     }
 
-    public void sendMessage(String message) {queue.offer(message);}
 
     @Override
-    public Set<String> getSupportedOptions() {
-        return null;
+    public void handle(Message message) {
+        queue.offer(message);
     }
-
-    @Override
-    public Set<String> getSupportedAnnotationTypes() {
-        return null;
-    }
-
-    @Override
-    public SourceVersion getSupportedSourceVersion() {
-        return null;
-    }
-
-    @Override
-    public void init(ProcessingEnvironment processingEnv) {
-
-    }
-
-    @Override
-    public boolean process(Set<? extends TypeElement> annotations, RoundEnvironment roundEnv) {
-        return false;
-    }
-
-    @Override
-    public Iterable<? extends Completion> getCompletions(Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
-        return null;
-    }
-
 
 }
 //    String removePrivateInformation(String InputData) {

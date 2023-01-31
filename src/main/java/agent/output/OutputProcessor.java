@@ -1,6 +1,6 @@
 package agent.output;
 
-import agent.Configuration;
+import agent.config.Configuration;
 
 import javax.annotation.processing.Completion;
 import javax.annotation.processing.ProcessingEnvironment;

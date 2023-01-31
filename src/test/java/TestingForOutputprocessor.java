@@ -1,4 +1,4 @@
-import agent.Configuration;
+import agent.config.Configuration;
 import agent.output.OutputProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

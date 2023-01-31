@@ -1,10 +1,13 @@
-import agent.Configuration;
+import agent.config.Configuration;
 import agent.filter.FilterProcessor;
+import agent.input.InputProcessor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -16,13 +19,15 @@ public class TestingForFilterProcessor {
 
     FilterProcessor filterProcessor;
     Configuration configuration;
+    @Autowired
+    InputProcessor inputProcessor;
     InputStream input = null;
     Properties prop = new Properties();
     @BeforeEach
     public void init() {
         configuration = new Configuration();
         configuration.fetchPaths();
-        filterProcessor = new FilterProcessor(configuration);
+        filterProcessor = new FilterProcessor(inputProcessor,configuration);
     }
 
     @Test

@@ -1,7 +1,7 @@
 package agent.input;
 
-import agent.Configuration;
-import agent.filter.*;
+import agent.config.Configuration;
+import agent.filter.FilterProcessor;
 
 import javax.annotation.processing.Completion;
 import javax.annotation.processing.ProcessingEnvironment;
@@ -13,22 +13,22 @@ import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
 import java.io.*;
+import java.util.Observer;
 import java.util.Set;
+import java.util.Observable;
 
-public class InputProcessor implements Processor {
+public class InputProcessor extends Observable implements Processor {
 
     private static final int MAX_BATCH_SIZE = 1048576;
-    private FilterProcessor filter;
-    String directoryPath,line;
+    private String directoryPath,line,data;
+    private Observer observer;
 
-    public InputProcessor(Configuration configuration) throws IOException {
+    public InputProcessor(Configuration configuration){
         directoryPath = configuration.getDirectoryPath("inputDirectoryPath");
-        configuration.putRegex();
-        filter = new FilterProcessor(configuration);
     }
     public void process() {
 
-        File directory = new File(directoryPath);         //path to directory
+        File directory = new File(directoryPath);                                                //path to directory
 
         File[] files = directory.listFiles();
 
@@ -49,27 +49,42 @@ public class InputProcessor implements Processor {
                             int read = reader.read(batch, 0, MAX_BATCH_SIZE);
 
 
-                            String batchString = new String(batch, 0, read);    // Process the batch
-                            filter.sendMessage(batchString);
+                            String batchString = new String(batch, 0, read);              // Process the batch
+                            data = batchString;
+
                         }
                     }
                 } else {
 
                     try (BufferedReader reader = new BufferedReader(new FileReader(file))) {      // File size is less than or equal to the maximum batch size
-                        // Read the entire file in one go
+                                                                                                  // Read the entire file in one go
                         String entireFile = "";
                         while ((line = reader.readLine()) != null) {
                             entireFile += (line + "\n");
                         }
-                        filter.sendMessage(entireFile);
+                        data = entireFile;
                     }
                 }
+                notifyObservers();
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
-            filter.process();
         }
+    }
+
+    public void register(Observer observer)
+    {
+        this.observer = observer;
+    }
+
+    @Override
+    public void notifyObservers() {
+
+        observer.update(this,null);                                  //synchronization is used to make sure any observer registered after message is received is not notified
+    }
+    public Object getUpdate(Observer observer)
+    {
+        return this.data;
     }
 
     @Override

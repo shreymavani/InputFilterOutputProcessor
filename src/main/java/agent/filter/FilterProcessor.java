@@ -1,6 +1,7 @@
 package agent.filter;
 
-import agent.Configuration;
+import agent.config.Configuration;
+import agent.input.InputProcessor;
 import agent.output.OutputProcessor;
 
 import org.jetbrains.annotations.NotNull;
@@ -13,34 +14,39 @@ import javax.lang.model.element.AnnotationMirror;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.TypeElement;
-import java.util.LinkedList;
-import java.util.Queue;
-import java.util.Set;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import agent.Configuration;
 
-public class FilterProcessor implements Processor {
+public class FilterProcessor implements Observer,Processor {
 
-    private String filterData,regex;
+    private String filterData,regex,rawData;
     private OutputProcessor outputProcessor;
+    private InputProcessor inputProcessor;
     private Queue<String> queue = new LinkedList<>();
-    public FilterProcessor(Configuration configuration)
+    public FilterProcessor(InputProcessor inputProcessor,Configuration configuration)
     {
         regex = configuration.getRegex();
+        this.inputProcessor = inputProcessor;
         outputProcessor = new OutputProcessor(configuration);
     }
     public void process() {
 
         try {
-            String currentData = receiveMessage();
-            filterData = stringFiltering(currentData, regex);
+            filterData = stringFiltering(rawData, regex);
             outputProcessor.sendMessage(filterData);
             outputProcessor.process();
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
     }
+    @Override
+    public void update(Observable o, Object arg) {
+
+        rawData = (String) inputProcessor.getUpdate(this);
+        process();
+    }
+
 
     public String stringFiltering(@NotNull String inputData, String regex) {
         String[] splitData = inputData.split("\n");
@@ -60,8 +66,6 @@ public class FilterProcessor implements Processor {
     }
 
     public void sendMessage(String message) {queue.offer(message);}
-
-    public String receiveMessage() {return queue.poll();}
 
     @Override
     public Set<String> getSupportedOptions() {
@@ -92,6 +96,8 @@ public class FilterProcessor implements Processor {
     public Iterable<? extends Completion> getCompletions(Element element, AnnotationMirror annotation, ExecutableElement member, String userText) {
         return null;
     }
+
+
 }
 //    String removePrivateInformation(String InputData) {
 //

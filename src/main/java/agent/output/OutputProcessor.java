@@ -7,8 +7,6 @@ import agent.processor.Processor;
 
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.LinkedList;
-import java.util.Queue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -60,6 +58,6 @@ public class OutputProcessor implements Processor, MessageHandler {
 
     @Override
     public void run() {
-        
+
     }
 }

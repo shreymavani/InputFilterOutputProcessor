@@ -6,8 +6,6 @@ import agent.messageHandler.MessageHandler;
 import agent.processor.Processor;
 
 import java.io.*;
-import java.util.Observer;
-import java.util.Observable;
 
 public class InputProcessor implements Processor {
 

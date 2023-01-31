@@ -9,7 +9,6 @@ import agent.processor.Processor;
 import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -69,7 +68,6 @@ public class FilterProcessor implements MessageHandler,Processor {
         return filterData;
 
     }
-
 
     @Override
     public void handle(Message message) {

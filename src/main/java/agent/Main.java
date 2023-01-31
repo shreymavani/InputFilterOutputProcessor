@@ -10,7 +10,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args){
         Configuration configuration = new Configuration();
         Configuration.fetchPaths();
         ExecutorService executorService = Executors.newFixedThreadPool(2);
